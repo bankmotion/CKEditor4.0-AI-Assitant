@@ -47,10 +47,14 @@ function openDialog(editor) {
                     `
                 }]
             }],
-            onOk: function () {
-            },
-            onCancel: function () {
-            }
+            buttons: [{
+                id: 'cancel',
+                type: 'button',
+                label: editor.lang.common.cancel,
+                onClick: function () {
+                    this.getDialog().hide();
+                }
+            }]
         };
     });
 
@@ -97,7 +101,7 @@ const ckeHandleGenerate = (editor) => {
 
     document.getElementById("cke-credit").innerHTML = `AI Credits: ${vkeCredits}`;
     var questionText = document.getElementById('cke-question').value;
-    
+
     fetch('./json.php', {
         method: 'POST',
         body: JSON.stringify({ questionText })
@@ -130,9 +134,14 @@ const ckeHandleInsert = (editor) => {
     } else {
         console.log('No text selected or range is collapsed');
     }
+
+    var dialog = CKEDITOR.dialog.getCurrent();
+    dialog.hide();
 }
 
 const ckeHandleReplace = (editor) => {
     var responseText = document.getElementById('cke-response').value;
     editor.insertHtml(`<p>${responseText}</p>`);
+    var dialog = CKEDITOR.dialog.getCurrent();
+    dialog.hide();
 }
