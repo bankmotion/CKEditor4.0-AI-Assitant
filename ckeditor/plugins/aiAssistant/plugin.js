@@ -98,24 +98,23 @@ const ckeHandleGenerate = (editor) => {
 
 const ckeHandleInsert = (editor) => {
     var responseText = document.getElementById('cke-response').value;
-    editor.insertHtml(`<p>${responseText}</p>`);
 
-    // var selection = editor.getSelection();
-    // var range = selection.getRanges()[0];
+    var selection = editor.getSelection();
+    var range = selection.getRanges()[0];
 
-    // if (range) {
-    //     var newElement = editor.document.createElement('p');
-    //     newElement.setHtml(responseText);
-    //     range.moveToPosition(CKEDITOR.POSITION_AFTER_END);
+    if (range) {
+        var newElement = editor.document.createElement('p');
+        newElement.setHtml(responseText);
+        range.moveToPosition(CKEDITOR.POSITION_AFTER_END);
 
-    //     range.insertNode(newElement);
+        range.insertNode(newElement);
 
-    //     var newRange = editor.createRange();
-    //     newRange.moveToPosition(newElement, CKEDITOR.POSITION_AFTER_END);
-    //     selection.selectRanges([newRange]);
-    // } else {
-    //     console.log('No text selected or range is collapsed');
-    // }
+        var newRange = editor.createRange();
+        newRange.moveToPosition(newElement, CKEDITOR.POSITION_AFTER_END);
+        selection.selectRanges([newRange]);
+    } else {
+        console.log('No text selected or range is collapsed');
+    }
 }
 
 const ckeHandleReplace = (editor) => {
