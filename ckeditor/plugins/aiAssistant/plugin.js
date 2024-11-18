@@ -33,9 +33,21 @@ function openDialog(editor) {
                     type: 'html',
                     html: `
                         <div>
-                            <div id="ckeQuestionBlock">
+                            <div class="dropdown-container" id="ckeQuestionBlock">
                                 <label for="cke-question">Question:</label><br>
-                                <input type="text" class="cke_dialog_ui_input_text" id="cke-question"><br><br>
+                                <input type="text" class="input-field cke_dialog_ui_input_text" id="cke-question">
+                                <div class="dropdown-menu" id="dropdownMenu">
+                                    <div class="dropdown-item">This is sentence 1.</div>
+                                    <div class="dropdown-item">This is sentence 2.</div>
+                                    <div class="dropdown-item">This is sentence 3.</div>
+                                    <div class="dropdown-item">This is sentence 4.</div>
+                                    <div class="dropdown-item">This is sentence 5.</div>
+                                    <div class="dropdown-item">This is sentence 6.</div>
+                                    <div class="dropdown-item">This is sentence 7.</div>
+                                    <div class="dropdown-item">This is sentence 8.</div>
+                                    <div class="dropdown-item">This is sentence 9.</div>
+                                    <div class="dropdown-item">This is sentence 10.</div>
+                                </div>
                             </div>
                             <label for="cke-response" class="cke_dialog_ui_input_text">AI Response:</label><br>
                             <textarea id="cke-response" class="cke_dialog_ui_input_textarea" rows="5"></textarea><br><br>
@@ -74,6 +86,27 @@ function openDialog(editor) {
     }
 
     if (document.getElementById("cke-btn-generate").dataset.clickBound == undefined) {
+        const dropdownInput = document.getElementById('cke-question');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        dropdownInput.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdownInput.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', () => {
+                dropdownInput.value = item.textContent;
+                dropdownMenu.classList.remove('active');
+            });
+        });
+
         document.getElementById("cke-btn-generate").addEventListener('click', handleGenerate);
         document.getElementById("cke-btn-insert").addEventListener('click', handleInsert);
         document.getElementById("cke-btn-replace").addEventListener('click', handleReplace);
