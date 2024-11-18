@@ -46,7 +46,7 @@ CKEDITOR.editorConfig = function( config ) {
 
     //sourcedialog,sourcearea'document','CommentSelectedRange', 'UncommentSelectedRange'simple-image-browser,
     // config.extraPlugins = 'codemirror,autogrow,customfield,socialbuttons,docprops,imagebrowser';
-    config.extraPlugins = 'dropdownMenuPlugin,codemirror,autogrow,customfield,socialbuttons,docprops,uploadimage,imagebrowser';
+    config.extraPlugins = 'aiAssistant,dropdownMenuPlugin,codemirror,autogrow,customfield,socialbuttons,docprops,uploadimage,imagebrowser';
 
     //new fonts
     config.contentsCss = "@import url('https://fonts.googleapis.com/css?family=Abril+Fatface|Archivo|Archivo+Black|Cardo|Chivo|Crimson+Text|Judson|Lato|Lora|Montserrat|Open+Sans|Oswald|Playfair+Display|Prata|Quicksand|Roboto');";
@@ -81,7 +81,7 @@ CKEDITOR.editorConfig = function( config ) {
         { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
         { name: 'insert', items: [ 'Image', 'Table', 'SpecialChar' ] },
         { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
-        { name: 'others', items: [ 'DropdownMenu','socialbuttons'  ] }
+        { name: 'others', items: [ 'DropdownMenu','aiAssistant', 'socialbuttons'  ] }
 
     ];
 
