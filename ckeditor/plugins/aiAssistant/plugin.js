@@ -33,12 +33,15 @@ function openDialog(editor) {
                     type: 'html',
                     html: `
                         <div>
-                            <label for="cke-question">Question:</label><br>
-                            <input type="text" class="cke_dialog_ui_input_text" id="cke-question"><br><br>
+                            <div id="ckeQuestionBlock">
+                                <label for="cke-question">Question:</label><br>
+                                <input type="text" class="cke_dialog_ui_input_text" id="cke-question"><br><br>
+                            </div>
                             <label for="cke-response" class="cke_dialog_ui_input_text">AI Response:</label><br>
                             <textarea id="cke-response" class="cke_dialog_ui_input_textarea" rows="5"></textarea><br><br>
+                            <p id="cke-credit">AI Credits: 10</p><br>
                             <a id="cke-btn-generate" class="cke_dialog_ui_button">&nbsp;Generate&nbsp;</a>
-                            <a id="cke-btn-insert" class="cke_dialog_ui_button">&nbsp;Insert Bellow&nbsp;</a>
+                            <a id="cke-btn-insert" class="cke_dialog_ui_button">&nbsp;Insert&nbsp;</a>
                             <a id="cke-btn-replace" class="cke_dialog_ui_button">&nbsp;Replace&nbsp;</a>
                         </div>
                     `
@@ -81,8 +84,20 @@ function openDialog(editor) {
     document.getElementById("cke-response").value = "";
 }
 
+let vkeCredits = 10;
+
 const ckeHandleGenerate = (editor) => {
+    if (vkeCredits > 1) {
+        vkeCredits--;
+    } else {
+        vkeCredits = 0;
+        document.getElementById("cke-btn-generate").style.display = 'none';
+        document.getElementById("ckeQuestionBlock").style.display = 'none';
+    }
+
+    document.getElementById("cke-credit").innerHTML = `AI Credits: ${vkeCredits}`;
     var questionText = document.getElementById('cke-question').value;
+    
     fetch('./json.php', {
         method: 'POST',
         body: JSON.stringify({ questionText })

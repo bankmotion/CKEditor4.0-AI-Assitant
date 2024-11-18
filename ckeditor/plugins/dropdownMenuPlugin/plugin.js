@@ -84,6 +84,7 @@
 //         });
 //     }
 // });
+var cke_credits = 10;
 
 CKEDITOR.plugins.add('dropdownMenuPlugin', {
     requires: ['richcombo'],
@@ -128,7 +129,7 @@ CKEDITOR.plugins.add('dropdownMenuPlugin', {
                     }
                 }
 
-                this.startGroup("Translate");
+                this.startGroup("Translate");   
                 for (var i = 0; i < strings.length; i++) {
                     if (strings[i][2].indexOf("translate") != -1) {
                         this.add(strings[i][0], strings[i][1], strings[i][2]);
