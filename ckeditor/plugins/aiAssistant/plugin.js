@@ -18,8 +18,26 @@ CKEDITOR.plugins.add('aiAssistant', {
     }
 });
 
+const loadCredits = async () => {
+    const res = await fetch('./json.php?action=getcredits', {
+        method: 'POST',
+    });
+    const json = await res.json();
+    cke_credits = Number(json.aicredits);
+}
+
 // Function to open the dialog
-function openDialog(editor) {
+async function openDialog(editor) {
+
+    await loadCredits();
+
+    if(cke_aiTrigger == true) {
+        var selectedText = editor.getSelection().getSelectedText();
+        if(selectedText == "") {
+            alert("Please select some text first!");
+            return;
+        }
+    }
     // Define the dialog using CKEDITOR.dialog.add()
     CKEDITOR.dialog.add('aiAssistantDialog', function (editor) {
         return {
@@ -50,8 +68,8 @@ function openDialog(editor) {
                                 </div>
                             </div>
                             <label for="cke-response" class="cke_dialog_ui_input_text">AI Response:</label><br>
-                            <textarea id="cke-response" class="cke_dialog_ui_input_textarea" rows="5"></textarea><br><br>
-                            <p id="cke-credit">AI Credits: 10</p><br>
+                            <textarea readonly id="cke-response" class="cke_dialog_ui_input_textarea" rows="5"></textarea><br><br>
+                            <p id="cke-credit">AI Credits: ${cke_credits}</p><br>
                             <a id="cke-btn-generate" class="cke_dialog_ui_button">&nbsp;Generate&nbsp;</a>
                             <a id="cke-btn-insert" class="cke_dialog_ui_button">&nbsp;Insert&nbsp;</a>
                             <a id="cke-btn-replace" class="cke_dialog_ui_button">&nbsp;Replace&nbsp;</a>
@@ -116,23 +134,30 @@ function openDialog(editor) {
         document.getElementById("cke-btn-replace").dataset.clickBound = true;
     }
 
+    if(cke_aiTrigger || cke_credits == 0) {
+        document.getElementById("cke-btn-generate").style.display = 'none';
+        document.getElementById("ckeQuestionBlock").style.display = 'none';
+    } else {
+        document.getElementById("cke-btn-generate").style.display = '';
+        document.getElementById("ckeQuestionBlock").style.display = '';
+    }
+
+    cke_aiTrigger = false;
+
     var selectedText = editor.getSelection().getSelectedText();
     document.getElementById("cke-question").value = selectedText;
     document.getElementById("cke-response").value = "";
 }
 
-let vkeCredits = 10;
+const ckeHandleGenerate = async (editor) => {
+    await loadCredits();
 
-const ckeHandleGenerate = (editor) => {
-    if (vkeCredits > 1) {
-        vkeCredits--;
-    } else {
-        vkeCredits = 0;
+    if (cke_credits < 1) {
         document.getElementById("cke-btn-generate").style.display = 'none';
         document.getElementById("ckeQuestionBlock").style.display = 'none';
     }
 
-    document.getElementById("cke-credit").innerHTML = `AI Credits: ${vkeCredits}`;
+    document.getElementById("cke-credit").innerHTML = `AI Credits: ${cke_credits}`;
     var questionText = document.getElementById('cke-question').value;
 
     fetch('./json.php', {

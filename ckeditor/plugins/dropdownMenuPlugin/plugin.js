@@ -84,7 +84,8 @@
 //         });
 //     }
 // });
-var cke_credits = 10;
+var cke_credits = 0;
+let cke_aiTrigger;
 
 CKEDITOR.plugins.add('dropdownMenuPlugin', {
     requires: ['richcombo'],
@@ -142,6 +143,7 @@ CKEDITOR.plugins.add('dropdownMenuPlugin', {
                 for (var i = 0; i < strings.length; i++) {
                     if (strings[i][0] === value) {
                         // Show an alert with the item text
+                        cke_aiTrigger = true;
                         const event = new Event('click');
                         document.getElementById("cke_66").dispatchEvent(event);
                         break;
