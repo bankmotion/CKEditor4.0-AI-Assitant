@@ -24,6 +24,14 @@ const loadCredits = async () => {
     });
     const json = await res.json();
     cke_credits = Number(json.aicredits);
+
+    if (cke_credits <= 0 && document.getElementById("cke-credit") != undefined) {
+        document.getElementById("cke-btn-generate").style.display = 'none';
+        document.getElementById("ckeQuestionBlock").style.display = 'none';
+    }
+    if (document.getElementById("cke-credit") != undefined) {
+        document.getElementById("cke-credit").innerHTML = `AI Credits: ${cke_credits}`;
+    }
 }
 
 // Function to open the dialog
@@ -31,10 +39,11 @@ async function openDialog(editor) {
 
     await loadCredits();
 
-    if(cke_aiTrigger == true) {
+    if (cke_aiTrigger == true) {
         var selectedText = editor.getSelection().getSelectedText();
-        if(selectedText == "") {
+        if (selectedText == "") {
             alert("Please select some text first!");
+            cke_aiTrigger = false;
             return;
         }
     }
@@ -134,12 +143,25 @@ async function openDialog(editor) {
         document.getElementById("cke-btn-replace").dataset.clickBound = true;
     }
 
-    if(cke_aiTrigger || cke_credits == 0) {
+    if (cke_aiTrigger || cke_credits <= 0) {
         document.getElementById("cke-btn-generate").style.display = 'none';
         document.getElementById("ckeQuestionBlock").style.display = 'none';
     } else {
         document.getElementById("cke-btn-generate").style.display = '';
         document.getElementById("ckeQuestionBlock").style.display = '';
+    }
+    var selectedText = editor.getSelection().getSelectedText();
+    if (cke_aiTrigger) {
+        if(cke_credits <= 0) {
+            document.getElementById("cke-response").value = "";
+            return;
+        }
+        const res = await fetch(`./json.php?action=${cke_aiCmdType}`, { method: 'POST', body: JSON.stringify({ questionText: selectedText }) });
+        const data = await res.json();
+        setTimeout(() => {
+            document.getElementById("cke-response").value = data.airesponse;
+        }, 100)
+        await loadCredits();
     }
 
     cke_aiTrigger = false;
@@ -153,24 +175,15 @@ const ckeHandleGenerate = async (editor) => {
     await loadCredits();
 
     if (cke_credits < 1) {
-        document.getElementById("cke-btn-generate").style.display = 'none';
-        document.getElementById("ckeQuestionBlock").style.display = 'none';
+        return;
     }
 
-    document.getElementById("cke-credit").innerHTML = `AI Credits: ${cke_credits}`;
     var questionText = document.getElementById('cke-question').value;
 
-    fetch('./json.php', {
-        method: 'POST',
-        body: JSON.stringify({ questionText })
-    })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("cke-response").value = data.airesponse;
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+    const res = await fetch('./json.php', { method: 'POST', body: JSON.stringify({ questionText }) });
+    const data = await res.json();
+    document.getElementById("cke-response").value = data.airesponse;
+    await loadCredits();
 }
 
 const ckeHandleInsert = (editor) => {

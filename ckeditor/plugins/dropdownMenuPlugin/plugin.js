@@ -84,7 +84,8 @@
 //         });
 //     }
 // });
-var cke_credits = 0;
+let cke_credits = 0;
+let cke_aiCmdType;
 let cke_aiTrigger;
 
 CKEDITOR.plugins.add('dropdownMenuPlugin', {
@@ -92,15 +93,15 @@ CKEDITOR.plugins.add('dropdownMenuPlugin', {
     init: function (editor) {
         // Array of strings to choose from that'll be inserted into the editor
         var strings = [
-            ['@@Tone::displayList()@@', 'Direct', 'directTone'],
-            ['@@Tone::displayList()@@', 'Casual', 'casualTone'],
+            ['@@Tone::displayList(Direct)@@', 'Direct', 'directTone'],
+            ['@@Tone::displayList(Casual)@@', 'Casual', 'casualTone'],
 
-            ['@@Style::displayList()@@', 'Business', 'businessStyle'],
-            ['@@Style::displayList()@@', 'Legal', 'legalStyle'],
+            ['@@Style::displayList(Business)@@', 'Business', 'businessStyle'],
+            ['@@Style::displayList(Legal)@@', 'Legal', 'legalStyle'],
 
-            ['@@Translate::displayList()@@', 'English', 'translateEnglish'],
-            ['@@Translate::displayList()@@', 'Spanish', 'translateSpanish'],
-            ['@@Translate::displayList()@@', 'French', 'translateFrench'],
+            ['@@Translate::displayList(English)@@', 'English', 'translateEnglish'],
+            ['@@Translate::displayList(Spanish)@@', 'Spanish', 'translateSpanish'],
+            ['@@Translate::displayList(French)@@', 'French', 'translateFrench'],
         ];
 
         // Add the menu to the editor
@@ -144,6 +145,8 @@ CKEDITOR.plugins.add('dropdownMenuPlugin', {
                     if (strings[i][0] === value) {
                         // Show an alert with the item text
                         cke_aiTrigger = true;
+                        cke_aiCmdType = strings[i][2];
+
                         const event = new Event('click');
                         document.getElementById("cke_66").dispatchEvent(event);
                         break;
