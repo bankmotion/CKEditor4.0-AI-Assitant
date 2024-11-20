@@ -172,9 +172,8 @@ const loadDropdown = () => {
     if(questionList.length > 0) {
         let strOption = ``;
         for(var i = 0; i < questionList.length - 1; i++) {
-            strOption += `<div class="dropdown-item">${questionList[i]}</div>`
+            strOption += `<div class="dropdown-item" onclick="document.getElementById('cke-question').value = '${questionList[i]}'; dropdownMenu.classList.remove('active');">${questionList[i]}</div>`
         }
-        console.log(strOption)
         document.getElementById("dropdownMenu").innerHTML = strOption;
     }
 }
