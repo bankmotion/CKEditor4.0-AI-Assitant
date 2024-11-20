@@ -148,10 +148,12 @@ CKEDITOR.plugins.add('dropdownMenuPlugin', {
                         cke_aiCmdType = strings[i][2];
 
                         const event1 = new Event('click');
-                        document.getElementById("cke_65").dispatchEvent(event1);
+                        if(document.getElementById("cke_65") != null)
+                            document.getElementById("cke_65").dispatchEvent(event1);
 
                         const event2 = new Event('click');
-                        document.getElementById("cke_66").dispatchEvent(event2);
+                        if(document.getElementById("cke_66") != null)
+                            document.getElementById("cke_66").dispatchEvent(event2);
                         break;
                     }
                 }
