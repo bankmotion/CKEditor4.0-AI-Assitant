@@ -147,8 +147,11 @@ CKEDITOR.plugins.add('dropdownMenuPlugin', {
                         cke_aiTrigger = true;
                         cke_aiCmdType = strings[i][2];
 
-                        const event = new Event('click');
-                        document.getElementById("cke_66").dispatchEvent(event);
+                        const event1 = new Event('click');
+                        document.getElementById("cke_65").dispatchEvent(event1);
+
+                        const event2 = new Event('click');
+                        document.getElementById("cke_66").dispatchEvent(event2);
                         break;
                     }
                 }
