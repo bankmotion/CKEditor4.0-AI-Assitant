@@ -10,7 +10,7 @@
 	}
 	else {
 		$arrayValues = array();
-		$arrayValues['error'] = 'Error message here';
+		$arrayValues['error'] = 'invalid open ai key';
 		$arrayValues['aicredits'] = $credits;
 		$arrayValues['airesponse'] = 'Data goes here from OpenAI';
 

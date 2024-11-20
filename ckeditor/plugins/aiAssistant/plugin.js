@@ -63,22 +63,11 @@ async function openDialog(editor) {
                             <div class="dropdown-container" id="ckeQuestionBlock">
                                 <label for="cke-question">Question:</label><br>
                                 <input type="text" class="input-field cke_dialog_ui_input_text" id="cke-question">
-                                <div class="dropdown-menu" id="dropdownMenu">
-                                    <div class="dropdown-item">This is sentence 1.</div>
-                                    <div class="dropdown-item">This is sentence 2.</div>
-                                    <div class="dropdown-item">This is sentence 3.</div>
-                                    <div class="dropdown-item">This is sentence 4.</div>
-                                    <div class="dropdown-item">This is sentence 5.</div>
-                                    <div class="dropdown-item">This is sentence 6.</div>
-                                    <div class="dropdown-item">This is sentence 7.</div>
-                                    <div class="dropdown-item">This is sentence 8.</div>
-                                    <div class="dropdown-item">This is sentence 9.</div>
-                                    <div class="dropdown-item">This is sentence 10.</div>
-                                </div>
+                                <div class="dropdown-menu" id="dropdownMenu"></div>
                             </div>
                             <label for="cke-response" class="cke_dialog_ui_input_text">AI Response:</label><br>
                             <textarea readonly id="cke-response" class="cke_dialog_ui_input_textarea" rows="5"></textarea><br><br>
-                            <p id="cke-credit">AI Credits: ${cke_credits}</p><br>
+                            <span id="cke-credit">AI Credits: ${cke_credits}</span> <span style="float: right;" id="cke-error">Error: </span><br>
                             <a id="cke-btn-generate" class="cke_dialog_ui_button">&nbsp;Generate&nbsp;</a>
                             <a id="cke-btn-insert" class="cke_dialog_ui_button">&nbsp;Insert&nbsp;</a>
                             <a id="cke-btn-replace" class="cke_dialog_ui_button">&nbsp;Replace&nbsp;</a>
@@ -154,12 +143,16 @@ async function openDialog(editor) {
     if (cke_aiTrigger) {
         if(cke_credits <= 0) {
             document.getElementById("cke-response").value = "";
+            document.getElementById("cke-error").innerHTML = "";
             return;
         }
         const res = await fetch(`./json.php?action=${cke_aiCmdType}`, { method: 'POST', body: JSON.stringify({ questionText: selectedText }) });
         const data = await res.json();
         setTimeout(() => {
             document.getElementById("cke-response").value = data.airesponse;
+            if(data.error) {
+                document.getElementById("cke-error").innerHTML = "Error: " + data.error;
+            }
         }, 100)
         await loadCredits();
     }
@@ -169,6 +162,21 @@ async function openDialog(editor) {
     var selectedText = editor.getSelection().getSelectedText();
     document.getElementById("cke-question").value = selectedText;
     document.getElementById("cke-response").value = "";
+    document.getElementById("cke-error").innerHTML = "";
+    loadDropdown();
+}
+
+const loadDropdown = () => {
+    const questionStr = localStorage.getItem("questionList");
+    const questionList = questionStr.split("<@#$>");
+    if(questionList.length > 0) {
+        let strOption = ``;
+        for(var i = 0; i < questionList.length - 1; i++) {
+            strOption += `<div class="dropdown-item">${questionList[i]}</div>`
+        }
+        console.log(strOption)
+        document.getElementById("dropdownMenu").innerHTML = strOption;
+    }
 }
 
 const ckeHandleGenerate = async (editor) => {
@@ -180,9 +188,18 @@ const ckeHandleGenerate = async (editor) => {
 
     var questionText = document.getElementById('cke-question').value;
 
+    let questionList = localStorage.getItem("questionList");
+    if(questionList == null) questionList = '';
+    questionList += questionText + "<@#$>";
+    localStorage.setItem("questionList", questionList);
+
     const res = await fetch('./json.php', { method: 'POST', body: JSON.stringify({ questionText }) });
     const data = await res.json();
     document.getElementById("cke-response").value = data.airesponse;
+    if(data.error) {
+        document.getElementById("cke-error").innerHTML = "Error: " + data.error;
+    }
+    loadDropdown();
     await loadCredits();
 }
 
