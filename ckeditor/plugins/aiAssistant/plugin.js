@@ -67,7 +67,7 @@ async function openDialog(editor) {
                             </div>
                             <label for="cke-response" class="cke_dialog_ui_input_text">AI Response:</label><br>
                             <textarea readonly id="cke-response" class="cke_dialog_ui_input_textarea" rows="5"></textarea><br><br>
-                            <span id="cke-credit">AI Credits: ${cke_credits}</span> <span style="float: right;" id="cke-error">Error: </span><br>
+                            <span id="cke-credit">AI Credits: ${cke_credits}</span> <span style="float: right; color: red;" id="cke-error">Error: </span><br>
                             <a id="cke-btn-generate" class="cke_dialog_ui_button">&nbsp;Generate&nbsp;</a>
                             <a id="cke-btn-insert" class="cke_dialog_ui_button">&nbsp;Insert&nbsp;</a>
                             <a id="cke-btn-replace" class="cke_dialog_ui_button">&nbsp;Replace&nbsp;</a>
